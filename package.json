@@ -1,6 +1,6 @@
 {
   "name": "mermaid-to-ascii",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Mermaid to ASCII: render Mermaid flowcharts as ASCII and Unicode text diagrams in Node.js, terminals and browsers",
   "type": "module",
   "main": "./dist/index.js",
