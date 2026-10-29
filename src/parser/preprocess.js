@@ -1,5 +1,5 @@
 import yaml from 'js-yaml';
-import { FlowInkError } from '../errors.js';
+import { MermaidToAsciiError } from '../errors.js';
 
 const FRONT_MATTER = /^([^\S\n\r]*)-{3}\s*[\n\r](.*?)[\n\r]\1-{3}\s*[\n\r]+/s;
 
@@ -30,7 +30,7 @@ export function preprocess(source) {
       if (!frontmatter || typeof frontmatter !== 'object' || Array.isArray(frontmatter)) frontmatter = {};
     } catch (error) {
       const mark = error?.mark;
-      throw new FlowInkError(error?.message ?? 'Invalid Mermaid frontmatter', {
+      throw new MermaidToAsciiError(error?.message ?? 'Invalid Mermaid frontmatter', {
         code: 'FRONTMATTER_ERROR',
         line: sourceLineAt(text, match.index + match[0].indexOf(match[2])) + (mark?.line ?? 0),
         column: mark ? mark.column + 1 : undefined,

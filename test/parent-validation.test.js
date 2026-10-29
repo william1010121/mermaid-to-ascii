@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { parse, render, renderGraph, FlowInkError } from '../src/index.js';
+import { parse, render, renderGraph, MermaidToAsciiError } from '../src/index.js';
 
 const source = 'flowchart TB\nsubgraph G[Group G]\nA\nend\nsubgraph H[Group H]\nB\nend\nsubgraph J[Group J]\nC\nend';
 const orders = [['G', 'H', 'J'], ['G', 'J', 'H'], ['H', 'G', 'J'], ['H', 'J', 'G'], ['J', 'G', 'H'], ['J', 'H', 'G']];
@@ -10,7 +10,7 @@ function graphInOrder(order) {
   graph.subgraphs = order.map(id => groups.get(id));
   return { graph, groups };
 }
-const invalid = error => error instanceof FlowInkError && error.code === 'INVALID_GRAPH';
+const invalid = error => error instanceof MermaidToAsciiError && error.code === 'INVALID_GRAPH';
 
 test('conflicting explicit and membership parents reject in every group order without mutation', async () => {
   for (const order of orders) {

@@ -11,7 +11,7 @@ an invocation-local callback in Jison's copied `yy` context. No callback or
 lexer state is exposed in the returned graph, and the generated parser is
 unchanged. The wrapper does not run in the token loop.
 
-For ordinary syntax errors, FlowInk copies the lookahead's beginning, not its
+For ordinary syntax errors, mermaid-to-ascii copies the lookahead's beginning, not its
 end or consumed offset. Lines and columns are one-based; columns count UTF-16
 code units, so an astral emoji occupies two code units. Existing preprocessing
 line offsets still apply to frontmatter, comments and directives; CRLF handling

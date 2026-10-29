@@ -1,12 +1,14 @@
 <div align="center">
 
-# FlowInk
+# mermaid-to-ascii
 
-**Mermaid flowcharts, rendered as text.**
+**Mermaid to ASCII: Mermaid flowcharts, rendered as text.**
+
+Formerly published as `flowink`.
 
 ASCII and Unicode diagrams for Node.js and the browser.
 
-[![npm version](https://img.shields.io/npm/v/flowink)](https://www.npmjs.com/package/flowink)
+[![npm version](https://img.shields.io/npm/v/mermaid-to-ascii)](https://www.npmjs.com/package/mermaid-to-ascii)
 [![JavaScript ESM](https://img.shields.io/badge/JavaScript-ESM-f7df1e?logo=javascript&logoColor=111111)](#quick-start)
 [![Mermaid 12.0.0](https://img.shields.io/badge/Mermaid-12.0.0-ff3670)](#compatibility)
 [![Node.js 22.12+](https://img.shields.io/badge/Node.js-%E2%89%A522.12-339933?logo=nodedotjs&logoColor=white)](#development)
@@ -18,7 +20,7 @@ ASCII and Unicode diagrams for Node.js and the browser.
 
 **Documentation status:** This README tracks `main`, which can contain changes
 not yet published to npm. The published **0.1.1** package exports synchronous
-`parse`, Promise-based `render`, and `FlowInkError`; it does **not** export `renderGraph`. To use
+`parse`, Promise-based `render`, and `MermaidToAsciiError`; it does **not** export `renderGraph`. To use
 `renderGraph`, build the matching source checkout as described in
 [Development](#development). The repository's `package.json` version alone
 does not establish that its current source has been published.
@@ -31,7 +33,7 @@ does not establish that its current source has been published.
 ```
 <!-- example:hero:end -->
 
-## Why FlowInk?
+## Why mermaid-to-ascii?
 
 - **Keep your Mermaid source.** Uses the official flowchart grammar pinned to Mermaid 12.0.0.
 - **Choose your alphabet.** ASCII by default, Unicode when you want box-drawing characters.
@@ -44,13 +46,13 @@ does not establish that its current source has been published.
 Requires **Node.js 22.12+**. Install from npm:
 
 ```sh
-npm install flowink
+npm install mermaid-to-ascii
 ```
 
 Create `demo.mjs` in your project:
 
 ```js
-import { parse, render } from 'flowink';
+import { parse, render } from 'mermaid-to-ascii';
 
 const source = `flowchart LR
   A[Mermaid] --> B[Plain text]
@@ -67,7 +69,7 @@ console.log(graph.nodes, graph.edges);
 node demo.mjs
 ```
 
-Browser applications can import `flowink` through their usual bundler.
+Browser applications can import `mermaid-to-ascii` through their usual bundler.
 
 ## Examples
 
@@ -237,7 +239,7 @@ console.log(await renderGraph(graph, { charset: 'unicode' }));
 
 For an unchanged graph with accepted acyclic drawing data, `renderGraph(parse(source), options)` produces the same output as `render(source, options)`. Rendering snapshots drawing data before asynchronous layout and does not mutate the input, so frozen graphs and concurrent calls are supported. Changes made after a call starts affect only later calls.
 
-Graph records must be plain objects from the caller or another realm (or null-prototype objects), with own data properties and ordinary dense arrays. Drawing fields are validated, including directions, identifiers, edge endpoints, arrow/stroke kinds, parents, and group membership. Accessors in drawing data are rejected without invoking them. Invalid graphs reject with `FlowInkError` code `INVALID_GRAPH`; layout failures retain their usual error codes. Graph errors do not fabricate Mermaid source locations.
+Graph records must be plain objects from the caller or another realm (or null-prototype objects), with own data properties and ordinary dense arrays. Drawing fields are validated, including directions, identifiers, edge endpoints, arrow/stroke kinds, parents, and group membership. Accessors in drawing data are rejected without invoking them. Invalid graphs reject with `MermaidToAsciiError` code `INVALID_GRAPH`; layout failures retain their usual error codes. Graph errors do not fabricate Mermaid source locations.
 
 `source`, styles, classes, and non-drawing metadata are ignored, not executed or reparsed. Text/shape metadata used for drawing is copied and must contain only acyclic data with at most 256 nested levels. Deeper drawing metadata rejects with `INVALID_GRAPH` before layout. Icon/image payloads are not loaded or traversed; only their presence selects a placeholder. This API accepts graph data, not arbitrary JavaScript instances or executable objects; it is not a sandbox for Proxies. Use `parse` followed by edits, or a JSON round-trip of its result, to preserve the graph structure. Cyclic text/shape metadata created by YAML aliases is rejected, even if source rendering accepts it. Ordinary data from same-origin iframes or VM contexts can be passed directly, including mixed-realm arrays and records. Custom class instances, array subclasses, and nonstandard prototype chains remain unsupported.
 
@@ -260,12 +262,12 @@ Multiline shape-data declarations (`@{...}`) follow YAML indentation, nested-map
 ### Errors
 
 ```js
-import { FlowInkError, render } from 'flowink';
+import { MermaidToAsciiError, render } from 'mermaid-to-ascii';
 
 try {
   console.log(await render(source));
 } catch (error) {
-  if (error instanceof FlowInkError) {
+  if (error instanceof MermaidToAsciiError) {
     console.error(error.code, error.message);
     if (error.line !== undefined) {
       console.error(`Line ${error.line}, column ${error.column}`);
@@ -297,15 +299,15 @@ Mermaid source → parser + graph model → ELK layout → character grid → te
 | Colors, CSS, animation, links, callbacks | Retained as data; callbacks are not executed and images are not fetched |
 | Invisible edges | Influence layout without visible strokes |
 
-FlowInk uses its own text layout rather than Mermaid SVG coordinates. Nonjoining crossings use `#` in ASCII and `╳` in Unicode, distinct from corners and junctions. Alignment follows character display widths; fonts and terminals can differ in their Unicode width conventions.
+mermaid-to-ascii uses its own text layout rather than Mermaid SVG coordinates. Nonjoining crossings use `#` in ASCII and `╳` in Unicode, distinct from corners and junctions. Alignment follows character display widths; fonts and terminals can differ in their Unicode width conventions.
 
 Compatibility covers this version's **flowcharts**, not other Mermaid diagram types or future releases. The first version supplies the package API; a CLI and editor UI are outside its current scope.
 
 ## Development
 
 ```sh
-git clone https://github.com/william1010121/flowink.git
-cd flowink
+git clone https://github.com/william1010121/mermaid-to-ascii.git
+cd mermaid-to-ascii
 npm ci
 npm run build
 npm test
@@ -320,11 +322,11 @@ The suite covers **435 upstream fixtures**, including complete static inputs and
 - **Parser comparison:** upstream cases use Mermaid's raw parser and FlowDB; preprocessing cases use Mermaid's public API. [Fixture provenance and exclusions](test/fixtures/upstream/README.md).
 - **Package installation:** `test:package` checks archive contents and installs the tarball in a temporary directory outside the project.
 - **Browser execution:** install Chromium once with `npx playwright install chromium`, then run `npm run test:browser`. It builds the browser bundle, serves it on an ephemeral loopback port, and executes five synthetic diagrams in real headless Chromium. ASCII and Unicode outputs must exactly match Node.js; syntax-error positions and repeatability are also checked. Browser errors, failed requests, incomplete results, mismatches, and timeouts fail the command. `npm run test:browser:runner` verifies these failure guards with deliberately broken pages and then checks the restored page.
-- **Manual browser inspection:** `npm run test:browser:build` only generates `.cache/browser-smoke/index.html`; it does not execute a browser. Serve that directory over HTTP to inspect `window.__flowinkSmoke` and the rendered diagrams.
+- **Manual browser inspection:** `npm run test:browser:build` only generates `.cache/browser-smoke/index.html`; it does not execute a browser. Serve that directory over HTTP to inspect `window.__mermaidToAsciiSmoke` and the rendered diagrams.
 - **CI:** pull requests and pushes to `main` run unit/compatibility tests, build, type checks, and tarball installation on Node 22.12.0 (the minimum), latest 22, 24, and 26. A separate Chromium job runs parity and failure-guard verification. Failed browser jobs retain generated smoke assets for seven days. No release or publishing steps run.
 
 Fixtures are checked in, so tests do not download upstream source on each run. Mermaid itself is a development-only oracle dependency. Rendering is asynchronous but still uses CPU; applications can run large layouts in their own worker.
 
 ## License
 
-FlowInk's own code is [MIT](LICENSE). Mermaid-derived files retain their MIT attribution. Runtime dependencies retain their own licenses, including elkjs's `EPL-2.0 OR GPL-3.0-or-later`. See [third-party notices](NOTICE.md).
+mermaid-to-ascii's own code is [MIT](LICENSE). Mermaid-derived files retain their MIT attribution. Runtime dependencies retain their own licenses, including elkjs's `EPL-2.0 OR GPL-3.0-or-later`. See [third-party notices](NOTICE.md).

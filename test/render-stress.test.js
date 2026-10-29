@@ -67,8 +67,8 @@ const cases = {
  Outer --> A`,
 
   rootId: `flowchart LR
- __flowink_root__[Root] --> B[Beta]
- B --> __flowink_root__`,
+ __mta_root__[Root] --> B[Beta]
+ B --> __mta_root__`,
 
   edgeAndNodeId: `flowchart LR
  e1[Edge node] e1@--> B[Beta]
@@ -224,7 +224,7 @@ test('supports nested group endpoints and cross-hierarchy routes', async () => {
 
 test('does not confuse a legal node ID with the internal ELK root ID', async () => {
   const graph = await assertRendered(cases.rootId, ['Root', 'Beta']);
-  assert.ok(graph.nodes.some((node) => node.id === '__flowink_root__'));
+  assert.ok(graph.nodes.some((node) => node.id === '__mta_root__'));
 });
 
 test('preserves a node ID that is also used as a user edge ID', async () => {

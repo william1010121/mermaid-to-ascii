@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import { verifyBrowser } from './verify-browser.js';
 
 // Exercise the actual browser runner with broken synthetic pages, not mocked APIs.
-const directory = await mkdtemp(join(tmpdir(), 'flowink-browser-'));
+const directory = await mkdtemp(join(tmpdir(), 'mermaid-to-ascii-browser-'));
 let offOriginHits = 0;
 const offOrigin = createServer((request, response) => {
   offOriginHits++;
@@ -22,13 +22,13 @@ try {
   const original = await readFile(join(directory, 'index.html'), 'utf8');
   const mutants = [
     ['output mismatch', original.replace('const results=[];', "expected[0].outputs[0] += 'wrong'; const results=[];"), /browser output differs/],
-    ['missing module', original.replace("from './flowink.js'", "from './missing.js'"), /Browser reported errors/],
-    ['page error', '<script>throw Error("intentional page error")</script><script>window.__flowinkSmoke={status:"passed",results:[]}</script>', /Browser reported errors/],
-    ['console error', '<script>console.error("intentional console error");window.__flowinkSmoke={status:"passed",results:[]}</script>', /Browser reported errors/],
-    ['HTTP resource failure', `<script type="module">await fetch('/missing.txt');window.__flowinkSmoke=${passed}</script>`, /HTTP 404:/],
-    ['off-origin request', `<script type="module">await fetch('http://127.0.0.1:${offOrigin.address().port}/').catch(()=>{});window.__flowinkSmoke=${passed}</script>`, /Off-origin request:/],
+    ['missing module', original.replace("from './mermaid-to-ascii.js'", "from './missing.js'"), /Browser reported errors/],
+    ['page error', '<script>throw Error("intentional page error")</script><script>window.__mermaidToAsciiSmoke={status:"passed",results:[]}</script>', /Browser reported errors/],
+    ['console error', '<script>console.error("intentional console error");window.__mermaidToAsciiSmoke={status:"passed",results:[]}</script>', /Browser reported errors/],
+    ['HTTP resource failure', `<script type="module">await fetch('/missing.txt');window.__mermaidToAsciiSmoke=${passed}</script>`, /HTTP 404:/],
+    ['off-origin request', `<script type="module">await fetch('http://127.0.0.1:${offOrigin.address().port}/').catch(()=>{});window.__mermaidToAsciiSmoke=${passed}</script>`, /Off-origin request:/],
     ['timeout', '<p>Never publishes completion</p>', /Browser completion timed out/],
-    ['incomplete results', '<script>window.__flowinkSmoke={status:"passed",results:[]}</script>', /deep-equal/],
+    ['incomplete results', '<script>window.__mermaidToAsciiSmoke={status:"passed",results:[]}</script>', /deep-equal/],
   ];
   for (const [name, html, pattern] of mutants) {
     await writeFile(join(directory, 'index.html'), html);

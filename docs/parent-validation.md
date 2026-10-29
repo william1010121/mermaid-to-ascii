@@ -2,7 +2,7 @@
 
 `renderGraph` accepts containment through an explicit `parentId`, a group's
 `nodeIds`, or matching redundant declarations. Conflicting declarations must
-reject with `FlowInkError` code `INVALID_GRAPH`, regardless of array order.
+reject with `MermaidToAsciiError` code `INVALID_GRAPH`, regardless of array order.
 
 Before this correction, `G.nodeIds = ['H']` and `H.parentId = 'J'` could be
 accepted when G preceded H: registering H's explicit parent overwrote the

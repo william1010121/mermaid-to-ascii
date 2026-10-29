@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { rasterize, validateLayout } from '../src/rasterize.js';
-import { FlowInkError } from '../src/errors.js';
+import { MermaidToAsciiError } from '../src/errors.js';
 
 const box = (id, x, y, width, height, lines = [id], shape = 'rect') => ({
   id, kind: 'node', x, y, width, height, lines, shape,
@@ -70,19 +70,19 @@ test('rejects routes that would be silently hidden by a node or a partially over
     height: 5,
     boxes: [box('node', 3, 1, 3, 3)],
     edges: [{ id: 'e', points: [{ x: 0, y: 2 }, { x: 8, y: 2 }] }],
-  }), (error) => error instanceof FlowInkError && error.code === 'EDGE_BOX_COLLISION');
+  }), (error) => error instanceof MermaidToAsciiError && error.code === 'EDGE_BOX_COLLISION');
   assert.throws(() => validateLayout({
     width: 8,
     height: 8,
     boxes: [box('a', 0, 0, 5, 5), box('b', 3, 3, 4, 4)],
     edges: [],
-  }), (error) => error instanceof FlowInkError && error.code === 'BOX_OVERLAP');
+  }), (error) => error instanceof MermaidToAsciiError && error.code === 'BOX_OVERLAP');
   assert.throws(() => validateLayout({
     width: 8,
     height: 8,
     boxes: [box('outer-node', 0, 0, 7, 7), box('inner-node', 2, 2, 3, 3)],
     edges: [],
-  }), (error) => error instanceof FlowInkError && error.code === 'BOX_OVERLAP');
+  }), (error) => error instanceof MermaidToAsciiError && error.code === 'BOX_OVERLAP');
 });
 
 test('strips trailing blanks while preserving labels and multiline edge labels', () => {
@@ -106,13 +106,13 @@ test('does not let a label or group title hide another route', () => {
       { id: 'h', points: [{ x: 0, y: 2 }, { x: 4, y: 2 }], label: { x: 2, y: 2, lines: ['h'], width: 1, height: 1 } },
       { id: 'v', points: [{ x: 2, y: 0 }, { x: 2, y: 4 }] },
     ],
-  }), (error) => error instanceof FlowInkError && error.code === 'LABEL_COLLISION');
+  }), (error) => error instanceof MermaidToAsciiError && error.code === 'LABEL_COLLISION');
   assert.throws(() => rasterize({
     width: 9,
     height: 5,
     boxes: [{ id: 'group', kind: 'subgraph', x: 1, y: 1, width: 7, height: 3, lines: ['Group'], shape: 'subgraph' }],
     edges: [{ id: 'route', points: [{ x: 0, y: 2 }, { x: 8, y: 2 }] }],
-  }), (error) => error instanceof FlowInkError && error.code === 'LABEL_COLLISION');
+  }), (error) => error instanceof MermaidToAsciiError && error.code === 'LABEL_COLLISION');
 });
 
 test('does not let an arrow hide another edge route', () => {
@@ -124,7 +124,7 @@ test('does not let an arrow hide another edge route', () => {
       { id: 'arrowed', points: [{ x: 0, y: 1 }, { x: 4, y: 1 }], arrowEnd: 'point' },
       { id: 'through', points: [{ x: 4, y: 0 }, { x: 3, y: 0 }, { x: 3, y: 1 }, { x: 3, y: 2 }] },
     ],
-  }), (error) => error instanceof FlowInkError && error.code === 'ARROW_COLLISION');
+  }), (error) => error instanceof MermaidToAsciiError && error.code === 'ARROW_COLLISION');
 });
 
 test('rejects ambiguous self-crossings, collinear overlaps, and co-located bends', () => {
@@ -133,7 +133,7 @@ test('rejects ambiguous self-crossings, collinear overlaps, and co-located bends
     height: 6,
     boxes: [],
     edges: [{ id: 'self', points: [{ x: 0, y: 2 }, { x: 4, y: 2 }, { x: 4, y: 5 }, { x: 2, y: 5 }, { x: 2, y: 0 }, { x: 6, y: 0 }] }],
-  }), (error) => error instanceof FlowInkError && error.code === 'ROUTE_COLLISION');
+  }), (error) => error instanceof MermaidToAsciiError && error.code === 'ROUTE_COLLISION');
   assert.throws(() => rasterize({
     width: 9,
     height: 4,
@@ -142,7 +142,7 @@ test('rejects ambiguous self-crossings, collinear overlaps, and co-located bends
       { id: 'left', points: [{ x: 0, y: 2 }, { x: 5, y: 2 }] },
       { id: 'right', points: [{ x: 3, y: 2 }, { x: 8, y: 2 }] },
     ],
-  }), (error) => error instanceof FlowInkError && error.code === 'ROUTE_COLLISION');
+  }), (error) => error instanceof MermaidToAsciiError && error.code === 'ROUTE_COLLISION');
   assert.throws(() => rasterize({
     width: 5,
     height: 6,
@@ -151,5 +151,5 @@ test('rejects ambiguous self-crossings, collinear overlaps, and co-located bends
       { id: 'a', points: [{ x: 0, y: 3 }, { x: 2, y: 3 }, { x: 2, y: 5 }] },
       { id: 'b', points: [{ x: 4, y: 3 }, { x: 2, y: 3 }, { x: 2, y: 1 }] },
     ],
-  }), (error) => error instanceof FlowInkError && error.code === 'ROUTE_COLLISION');
+  }), (error) => error instanceof MermaidToAsciiError && error.code === 'ROUTE_COLLISION');
 });

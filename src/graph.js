@@ -1,4 +1,4 @@
-import { FlowInkError } from './errors.js';
+import { MermaidToAsciiError } from './errors.js';
 
 const directions = new Set(['TB', 'BT', 'LR', 'RL']);
 const arrows = new Set(['none', 'point', 'circle', 'cross']);
@@ -204,4 +204,4 @@ function data(value, path, ancestors, depth = 0, memo = new WeakMap()) {
   return result;
 }
 
-function fail(message) { throw new FlowInkError(message, { code: 'INVALID_GRAPH' }); }
+function fail(message) { throw new MermaidToAsciiError(message, { code: 'INVALID_GRAPH' }); }
