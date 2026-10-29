@@ -9,8 +9,8 @@ import { chromium } from 'playwright';
 export async function verifyBrowser({ directory = '.cache/browser-smoke', timeout = 30_000 } = {}) {
   const assets = new Map([
     ['/', ['index.html', 'text/html; charset=utf-8']],
-    ['/flowink.js', ['flowink.js', 'text/javascript; charset=utf-8']],
-    ['/flowink.js.map', ['flowink.js.map', 'application/json']],
+    ['/mermaid-to-ascii.js', ['mermaid-to-ascii.js', 'text/javascript; charset=utf-8']],
+    ['/mermaid-to-ascii.js.map', ['mermaid-to-ascii.js.map', 'application/json']],
   ]);
   const server = createServer(async (request, response) => {
     const asset = assets.get(request.url);
@@ -45,13 +45,13 @@ export async function verifyBrowser({ directory = '.cache/browser-smoke', timeou
     });
     await page.goto(`${origin}/`, { timeout: 30_000, waitUntil: 'load' });
     try {
-      await page.waitForFunction(() => window.__flowinkSmoke !== undefined, null, { timeout });
+      await page.waitForFunction(() => window.__mermaidToAsciiSmoke !== undefined, null, { timeout });
     } catch (error) {
       assert.equal(errors.length, 0, `Browser reported errors: ${errors.join('; ')}`);
       if (error.name === 'TimeoutError') throw new Error('Browser completion timed out', { cause: error });
       throw error;
     }
-    const result = await page.evaluate(() => window.__flowinkSmoke);
+    const result = await page.evaluate(() => window.__mermaidToAsciiSmoke);
     assert.equal(errors.length, 0, `Browser reported errors: ${errors.join('; ')}`);
     assert.equal(result.status, 'passed', result.error || 'Browser verification did not pass');
     assert.deepEqual(result.results.map(row => row.name), ['distinctArrowheads', 'nestedCrossLevel', 'nestedCompound', 'crossingRepair', 'crossings', 'shortSelfLoop', 'neighborSelfLoops', 'title-clearance', 'metadata-keys', 'yaml-scalar', 'tab-label', 'grapheme-lines', 'branch', 'cycle', 'parallel', 'nested', 'CJK']);

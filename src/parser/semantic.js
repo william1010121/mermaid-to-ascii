@@ -1,5 +1,5 @@
 import { mergeMetadata } from '../metadata.js';
-import { FlowInkError } from '../errors.js';
+import { MermaidToAsciiError } from '../errors.js';
 import yaml from 'js-yaml';
 
 const VALID_SHAPES = new Set(`join rounded state anchor db summary database start document event stop console process text circle rect display prepare squareRect choice note composite rectWithTitle labelRect block_arrow collapsedGroup iconSquare iconCircle icon iconRounded imageSquare kanbanItem proc rectangle roundedRect stadium terminal pill fr-rect subprocess subproc framed-rectangle subroutine cyl cylinder datastore data-store folder directory bucket browser person circ bang cloud diam decision diamond question hex hexagon lean-r lean-right in-out lean_right lean-l lean-left out-in lean_left trap-b priority trapezoid-bottom trapezoid trap-t manual trapezoid-top inv-trapezoid inv_trapezoid dbl-circ double-circle doublecircle notch-rect card notched-rectangle lin-rect lined-rectangle lined-process lin-proc shaded-process sm-circ small-circle stateStart fr-circ framed-circle stateEnd fork forkJoin hourglass collate brace comment brace-l brace-r braces bolt com-link lightning-bolt doc delay half-rounded-rectangle h-cyl das horizontal-cylinder lin-cyl disk lined-cylinder curv-trap curved-trapezoid div-rect div-proc divided-rectangle divided-process tri extract triangle win-pane internal-storage window-pane f-circ junction filled-circle notch-pent loop-limit notched-pentagon flip-tri manual-file flipped-triangle sl-rect manual-input sloped-rectangle docs documents st-doc stacked-document st-rect procs processes stacked-rectangle bow-rect stored-data bow-tie-rectangle cross-circ crossed-circle tag-doc tagged-document tag-rect tagged-rectangle tag-proc tagged-process flag paper-tape odd rect_left_inv_arrow lin-doc lined-document`.split(/\s+/));
@@ -44,7 +44,7 @@ function parseShapeData(raw) {
     }
     if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) mergeMetadata(metadata, parsed);
   } catch (error) {
-    throw new FlowInkError(error?.message ?? 'Invalid shape data.', { code: 'SHAPE_DATA_ERROR', cause: error });
+    throw new MermaidToAsciiError(error?.message ?? 'Invalid shape data.', { code: 'SHAPE_DATA_ERROR', cause: error });
   }
   metadata.raw = body;
   return metadata;
@@ -135,7 +135,7 @@ export class FlowSemanticDB {
       if (shapeData.shape !== undefined) {
         const shape = String(shapeData.shape);
         if (shape !== shape.toLowerCase() || shape.includes('_') || !VALID_SHAPES.has(shape)) {
-          throw new FlowInkError(`No such shape: ${shape}.`, { code: 'INVALID_SHAPE' });
+          throw new MermaidToAsciiError(`No such shape: ${shape}.`, { code: 'INVALID_SHAPE' });
         }
         vertex.shape = shape;
       }
@@ -256,7 +256,7 @@ export class FlowSemanticDB {
       else if (this.edges[position]) {
         this.edges[position].styles = styles.slice();
         if (styles.length && !styles.some((style) => String(style).startsWith('fill'))) this.edges[position].styles.push('fill:none');
-      } else throw new FlowInkError(`The link index ${position} is out of bounds.`, { code: 'INVALID_LINK_INDEX' });
+      } else throw new MermaidToAsciiError(`The link index ${position} is out of bounds.`, { code: 'INVALID_LINK_INDEX' });
     }
   }
 
@@ -269,7 +269,7 @@ export class FlowSemanticDB {
         this.edges[position].metadata.interpolate = interpolate;
         this.edges[position].interpolate = interpolate;
       }
-      else throw new FlowInkError(`The link index ${position} is out of bounds.`, { code: 'INVALID_LINK_INDEX' });
+      else throw new MermaidToAsciiError(`The link index ${position} is out of bounds.`, { code: 'INVALID_LINK_INDEX' });
     }
   }
 
@@ -333,5 +333,5 @@ export function parserError(error, source, tokenLocation) {
   const line = location?.first_line ?? error?.lineNumber;
   const firstColumn = location?.first_column;
   const column = firstColumn === undefined ? undefined : firstColumn + 1;
-  return new FlowInkError(error?.message ?? 'Invalid Mermaid flowchart', { code: 'PARSE_ERROR', line, column, cause: error });
+  return new MermaidToAsciiError(error?.message ?? 'Invalid Mermaid flowchart', { code: 'PARSE_ERROR', line, column, cause: error });
 }

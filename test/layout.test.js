@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { layout } from '../src/layout.js';
-import { FlowInkError } from '../src/errors.js';
+import { MermaidToAsciiError } from '../src/errors.js';
 
 const node = (id, label = id, parentId) => ({ id, label, labelType: 'text', shape: 'rect', parentId, styles: [], classes: [], metadata: {} });
 const group = (id, nodeIds, parentId, direction) => ({ id, label: id, nodeIds, parentId, direction, styles: [], classes: [], metadata: {} });
@@ -45,8 +45,8 @@ test('keeps nested groups, compound endpoints, loops, and parallel edges', async
 });
 
 test('rejects malformed containment and missing edge endpoints explicitly', async () => {
-  await assert.rejects(layout({ ...graph(), nodes: [node('a', 'a', 'missing'), node('b')] }), (error) => error instanceof FlowInkError && error.code === 'INVALID_GRAPH');
-  await assert.rejects(layout({ ...graph(), edges: [edge('bad', 'a', 'missing')] }), (error) => error instanceof FlowInkError && error.code === 'INVALID_GRAPH');
+  await assert.rejects(layout({ ...graph(), nodes: [node('a', 'a', 'missing'), node('b')] }), (error) => error instanceof MermaidToAsciiError && error.code === 'INVALID_GRAPH');
+  await assert.rejects(layout({ ...graph(), edges: [edge('bad', 'a', 'missing')] }), (error) => error instanceof MermaidToAsciiError && error.code === 'INVALID_GRAPH');
 });
 
 test('layout calls are deterministic and isolated', async () => {

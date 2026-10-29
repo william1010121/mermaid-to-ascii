@@ -1,6 +1,6 @@
 # Optional error-location declarations
 
-`FlowInkError.line` and `.column` can be `undefined`: for example, invalid input
+`MermaidToAsciiError.line` and `.column` can be `undefined`: for example, invalid input
 or layout errors may not have a source position. The generated declarations now
 explicitly say `number | undefined`, matching existing runtime behavior.
 

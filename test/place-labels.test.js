@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { placeLabels } from '../src/place-labels.js';
-import { FlowInkError } from '../src/errors.js';
+import { MermaidToAsciiError } from '../src/errors.js';
 
 const box = (id, x, y, width, height, kind = 'node', lines = [id]) => ({ id, kind, x, y, width, height, lines, shape: 'rect' });
 const edge = (id, points, label, extra = {}) => ({ id, points, arrowStart: 'none', arrowEnd: 'none', stroke: 'normal', ...(label ? { label } : {}), ...extra });
@@ -136,8 +136,8 @@ test('places a labelled self-loop in adjacent whitespace', () => {
   assert.equal(label.x >= 3 && label.x < 6 && label.y >= 2 && label.y < 4, false);
 });
 
-test('rejects malformed diagonal routes with FlowInkError', () => {
-  assert.throws(() => placeLabels({ width: 2, height: 2, boxes: [], edges: [edge('bad', [{ x: 0, y: 0 }, { x: 1, y: 1 }], { lines: ['x'] })] }), (error) => error instanceof FlowInkError && error.code === 'NON_ORTHOGONAL_EDGE');
+test('rejects malformed diagonal routes with MermaidToAsciiError', () => {
+  assert.throws(() => placeLabels({ width: 2, height: 2, boxes: [], edges: [edge('bad', [{ x: 0, y: 0 }, { x: 1, y: 1 }], { lines: ['x'] })] }), (error) => error instanceof MermaidToAsciiError && error.code === 'NON_ORTHOGONAL_EDGE');
 });
 
 test('positions a label at the middle of a long segment, not its first cell', () => {

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { parse, render, FlowInkError } from '../src/index.js';
+import { parse, render, MermaidToAsciiError } from '../src/index.js';
 
 const cases = {
   chain: 'flowchart LR\n A[Alpha] --> B[Beta] --> C[Gamma]',
@@ -66,7 +66,7 @@ test('repeated and concurrent renders are deterministic and isolated', async () 
 });
 test('rejects unsupported charset and malformed source with actionable errors', async () => {
   await assert.rejects(render('flowchart LR\n A-->B', { charset: 'svg' }), { code: 'INVALID_OPTIONS' });
-  await assert.rejects(render('flowchart LR\n A['), err => err instanceof FlowInkError && Number.isInteger(err.line));
+  await assert.rejects(render('flowchart LR\n A['), err => err instanceof MermaidToAsciiError && Number.isInteger(err.line));
 });
 test('a wide label is not clipped', async () => {
   const label = 'abc'.repeat(100);

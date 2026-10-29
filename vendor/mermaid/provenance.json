@@ -10,5 +10,5 @@
   },
   "grammarSha256": "e9891eb4f646140e5110e72ef5f79b099677a265ba1a84884b39a573b56d1c68",
   "license": "MIT",
-  "note": "flow.jison is vendored unmodified. FlowSemanticDB is a DOM-free adapter derived from flowDb.ts for FlowInk's FlowGraph IR."
+  "note": "flow.jison is vendored unmodified. FlowSemanticDB is a DOM-free adapter derived from flowDb.ts for mermaid-to-ascii's FlowGraph IR."
 }

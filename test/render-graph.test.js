@@ -76,7 +76,7 @@ test('snapshot isolation includes labels, metadata, edge endpoints, and membersh
   assert.equal(await pending, expected);
 });
 
-const invalid = predicate => error => error instanceof api.FlowInkError
+const invalid = predicate => error => error instanceof api.MermaidToAsciiError
   && error.code === 'INVALID_GRAPH' && error.line === undefined && (!predicate || predicate(error));
 
 test('reject malformed graphs and recover without leaking state', async () => {

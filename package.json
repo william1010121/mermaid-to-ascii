@@ -1,7 +1,7 @@
 {
-  "name": "flowink",
-  "version": "0.1.1",
-  "description": "Render Mermaid flowcharts as ASCII and Unicode diagrams in Node.js and browsers",
+  "name": "mermaid-to-ascii",
+  "version": "0.2.0",
+  "description": "Mermaid to ASCII: render Mermaid flowcharts as ASCII and Unicode text diagrams in Node.js, terminals and browsers",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -57,11 +57,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/william1010121/flowink.git"
+    "url": "git+https://github.com/william1010121/mermaid-to-ascii.git"
   },
-  "homepage": "https://github.com/william1010121/flowink#readme",
+  "homepage": "https://github.com/william1010121/mermaid-to-ascii#readme",
   "bugs": {
-    "url": "https://github.com/william1010121/flowink/issues"
+    "url": "https://github.com/william1010121/mermaid-to-ascii/issues"
   },
   "keywords": [
     "mermaid",
@@ -69,6 +69,9 @@
     "ascii",
     "unicode",
     "diagram",
-    "text"
+    "text",
+    "mermaid-to-ascii",
+    "mermaid ascii",
+    "terminal"
   ]
 }
