@@ -1,7 +1,7 @@
 // The bundled entry has no runtime dependency on the optional `web-worker`
 // package, so it works unchanged in both Node and browser consumers.
 import ELK from 'elkjs/lib/elk.bundled.js';
-import { FlowInkError } from './errors.js';
+import { MermaidToAsciiError } from './errors.js';
 import { prepareNode, labelLines, displayWidth } from './text.js';
 import { placeLabels } from './place-labels.js';
 
@@ -28,7 +28,7 @@ export async function layout(graph) {
   try {
     laidOut = await elk.layout(toElkGraph(context));
   } catch (cause) {
-    throw new FlowInkError(`ELK could not lay out the flowchart: ${cause instanceof Error ? cause.message : String(cause)}`, {
+    throw new MermaidToAsciiError(`ELK could not lay out the flowchart: ${cause instanceof Error ? cause.message : String(cause)}`, {
       code: 'LAYOUT_ERROR',
       cause,
     });
@@ -803,7 +803,7 @@ function routeArrowKeys(points, arrowStart = 'none', arrowEnd = 'none') {
 
 function segmentCells(a, b) {
   if (a.x !== b.x && a.y !== b.y) {
-    throw new FlowInkError(`Non-orthogonal segment from (${a.x},${a.y}) to (${b.x},${b.y}).`, { code: 'NON_ORTHOGONAL_EDGE' });
+    throw new MermaidToAsciiError(`Non-orthogonal segment from (${a.x},${a.y}) to (${b.x},${b.y}).`, { code: 'NON_ORTHOGONAL_EDGE' });
   }
   const cells = [];
   const dx = Math.sign(b.x - a.x); const dy = Math.sign(b.y - a.y);
@@ -907,7 +907,7 @@ function requireId(value, type) {
 }
 
 function invalid(message, code = 'INVALID_GRAPH') {
-  throw new FlowInkError(message, { code });
+  throw new MermaidToAsciiError(message, { code });
 }
 
 function key(x, y) { return `${x},${y}`; }

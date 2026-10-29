@@ -1,4 +1,4 @@
-import { FlowInkError } from './errors.js';
+import { MermaidToAsciiError } from './errors.js';
 import { displayWidth } from './text.js';
 
 /** @typedef {import('./types.js').LayoutGraph} LayoutGraph */
@@ -59,7 +59,7 @@ export function placeLabels(layout) {
       bounds: layoutBounds(layout, boxes, edges),
     });
     if (!candidate) {
-      throw new FlowInkError(`Cannot place label for edge ${edge.id} without hiding graph geometry.`, {
+      throw new MermaidToAsciiError(`Cannot place label for edge ${edge.id} without hiding graph geometry.`, {
         code: 'LABEL_PLACEMENT_ERROR',
       });
     }
@@ -376,6 +376,6 @@ function translateAndExpand(layout) {
 
 function key(x, y) { return `${x},${y}`; }
 
-function fail(message, code) { throw new FlowInkError(message, { code }); }
+function fail(message, code) { throw new MermaidToAsciiError(message, { code }); }
 
 export default placeLabels;

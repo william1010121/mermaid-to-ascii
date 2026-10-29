@@ -12,7 +12,7 @@ assert.ok(fixture.cases.length >= 150, `expected a broad upstream corpus, got ${
 
 // Mermaid's parser is usable in Node, but markdown labels and shape metadata
 // call DOMPurify. Keep this DOM confined to this dev-only oracle harness.
-const dom = new JSDOM('<!doctype html><html><body></body></html>', { url: 'https://flowink.test/' });
+const dom = new JSDOM('<!doctype html><html><body></body></html>', { url: 'https://mermaid-to-ascii.test/' });
 const DOM_GLOBALS = ['window', 'document', 'DOMParser', 'Node', 'navigator', 'Element', 'SVGElement', 'HTMLElement'];
 const previousGlobals = new Map();
 for (const name of DOM_GLOBALS) {
@@ -126,7 +126,7 @@ function normaliseOfficial(diagram, source) {
   const defaultInterpolate = rawEdges.defaultInterpolate;
   const nodes = [...(db.getVertices?.() ?? new Map()).values()]
     // Mermaid's DB creates a vertex for a subgraph reference in a few nested
-    // cases. FlowInk represents that reference as the subgraph itself, so it
+    // cases. mermaid-to-ascii represents that reference as the subgraph itself, so it
     // must not be compared as a second ordinary node.
     .filter((vertex) => !subgraphIds.has(String(vertex.id)))
     .map((vertex) => ({
@@ -187,7 +187,7 @@ function normaliseOfficial(diagram, source) {
     classes,
     metadata: {
       // getDiagramFromText strips frontmatter before exposing FlowDB, while
-      // FlowInk deliberately preserves its title in graph.metadata. Apply
+      // mermaid-to-ascii deliberately preserves its title in graph.metadata. Apply
       // the documented source-level title to the oracle projection so the
       // semantic comparison remains about the same graph contract.
       title: db.getAccTitle?.() || frontmatterTitle(source),
@@ -196,7 +196,7 @@ function normaliseOfficial(diagram, source) {
   };
 }
 
-function normaliseFlowInk(graph) {
+function normaliseGraph(graph) {
   const classDefinitions = new Map(Object.entries(graph.classes ?? {}).map(([id, styles]) => [id, styles]));
   const subgraphIds = new Set((graph.subgraphs ?? []).map((group) => String(group.id)));
   const nodes = (graph.nodes ?? []).map((node) => ({
@@ -204,7 +204,7 @@ function normaliseFlowInk(graph) {
     label: valueOrEmpty(node.label ?? node.id),
     labelType: node.labelType ?? 'text',
     shape: node.shape ?? 'rect',
-    // FlowInk materialises class declarations into styles. Subtract exactly
+    // mermaid-to-ascii materialises class declarations into styles. Subtract exactly
     // the styles contributed by this node's classes, preserving an explicit
     // source style that happens to have the same value.
     styles: sortStrings(subtractMaterialisedStyles(node.styles, node.classes, classDefinitions)),
@@ -287,7 +287,7 @@ function rawOracle(source) {
 
 function local(source) {
   try {
-    return { value: normaliseFlowInk(parse(source)) };
+    return { value: normaliseGraph(parse(source)) };
   } catch (error) {
     return { error };
   }
@@ -424,13 +424,13 @@ describe('Mermaid 12.0.0 flowchart parser compatibility', () => {
   for (const { fixtureCase, expected, actual } of outcomes) {
     const label = `${fixtureCase.upstream}:${fixtureCase.line} (${fixtureCase.id})`;
     if (expected.error) {
-      test(`${label} remains rejected by FlowInk`, () => {
-        assert.ok(actual.error, `Mermaid rejects this case but FlowInk accepted it: ${JSON.stringify(fixtureCase.source)}`);
+      test(`${label} remains rejected by mermaid-to-ascii`, () => {
+        assert.ok(actual.error, `Mermaid rejects this case but mermaid-to-ascii accepted it: ${JSON.stringify(fixtureCase.source)}`);
       });
     } else {
       test(`${label} matches Mermaid's semantic graph`, () => {
         if (actual.error) {
-          assert.fail(`Mermaid accepts this case but FlowInk rejected it: ${actual.error.message}`);
+          assert.fail(`Mermaid accepts this case but mermaid-to-ascii rejected it: ${actual.error.message}`);
         }
         assert.deepEqual(actual.value, expected.value);
       });
@@ -444,7 +444,7 @@ describe('Mermaid 12.0.0 flowchart parser compatibility', () => {
       else assert.deepEqual(actual.value, expected.value);
     });
     if (focusedCase.check && !actual.error) {
-      test(`focused ${focusedCase.name} retains FlowInk metadata`, () => focusedCase.check(parse(focusedCase.source)));
+      test(`focused ${focusedCase.name} retains mermaid-to-ascii metadata`, () => focusedCase.check(parse(focusedCase.source)));
     }
     if (focusedCase.errorLine) {
       test(`focused ${focusedCase.name} reports original line`, () => {

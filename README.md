@@ -1,12 +1,14 @@
 <div align="center">
 
-# FlowInk
+# mermaid-to-ascii
 
-**Mermaid flowcharts, rendered as text.**
+**Mermaid to ASCII: Mermaid flowcharts, rendered as text.**
+
+Formerly published as `flowink`.
 
 ASCII and Unicode diagrams for Node.js and the browser.
 
-[![npm version](https://img.shields.io/npm/v/flowink)](https://www.npmjs.com/package/flowink)
+[![npm version](https://img.shields.io/npm/v/mermaid-to-ascii)](https://www.npmjs.com/package/mermaid-to-ascii)
 [![JavaScript ESM](https://img.shields.io/badge/JavaScript-ESM-f7df1e?logo=javascript&logoColor=111111)](#quick-start)
 [![Mermaid 12.0.0](https://img.shields.io/badge/Mermaid-12.0.0-ff3670)](#compatibility)
 [![Node.js 22.12+](https://img.shields.io/badge/Node.js-%E2%89%A522.12-339933?logo=nodedotjs&logoColor=white)](#development)
@@ -24,7 +26,7 @@ ASCII and Unicode diagrams for Node.js and the browser.
 ```
 <!-- example:hero:end -->
 
-## Why FlowInk?
+## Why mermaid-to-ascii?
 
 - **Keep your Mermaid source.** Uses the official flowchart grammar pinned to Mermaid 12.0.0.
 - **Choose your alphabet.** ASCII by default, Unicode when you want box-drawing characters.
@@ -37,13 +39,13 @@ ASCII and Unicode diagrams for Node.js and the browser.
 Requires **Node.js 22.12+**. Install from npm:
 
 ```sh
-npm install flowink
+npm install mermaid-to-ascii
 ```
 
 Create `demo.mjs` in your project:
 
 ```js
-import { parse, render } from 'flowink';
+import { parse, render } from 'mermaid-to-ascii';
 
 const source = `flowchart LR
   A[Mermaid] --> B[Plain text]
@@ -60,7 +62,7 @@ console.log(graph.nodes, graph.edges);
 node demo.mjs
 ```
 
-Browser applications can import `flowink` through their usual bundler.
+Browser applications can import `mermaid-to-ascii` through their usual bundler.
 
 ## Examples
 
@@ -227,12 +229,12 @@ Returns an independent, serializable graph, retaining the exact original input.
 ### Errors
 
 ```js
-import { FlowInkError, render } from 'flowink';
+import { MermaidToAsciiError, render } from 'mermaid-to-ascii';
 
 try {
   console.log(await render(source));
 } catch (error) {
-  if (error instanceof FlowInkError) {
+  if (error instanceof MermaidToAsciiError) {
     console.error(error.code, error.message);
     if (error.line !== undefined) {
       console.error(`Line ${error.line}, column ${error.column}`);
@@ -264,15 +266,15 @@ Mermaid source → parser + graph model → ELK layout → character grid → te
 | Colors, CSS, animation, links, callbacks | Retained as data; callbacks are not executed and images are not fetched |
 | Invisible edges | Influence layout without visible strokes |
 
-FlowInk uses its own text layout rather than Mermaid SVG coordinates. Nonjoining crossings use `#` in ASCII and `╳` in Unicode, distinct from corners and junctions. Alignment follows character display widths; fonts and terminals can differ in their Unicode width conventions.
+mermaid-to-ascii uses its own text layout rather than Mermaid SVG coordinates. Nonjoining crossings use `#` in ASCII and `╳` in Unicode, distinct from corners and junctions. Alignment follows character display widths; fonts and terminals can differ in their Unicode width conventions.
 
 Compatibility covers this version's **flowcharts**, not other Mermaid diagram types or future releases. The first version supplies the package API; a CLI and editor UI are outside its current scope.
 
 ## Development
 
 ```sh
-git clone https://github.com/william1010121/flowink.git
-cd flowink
+git clone https://github.com/william1010121/mermaid-to-ascii.git
+cd mermaid-to-ascii
 npm ci
 npm run build
 npm test
@@ -286,10 +288,10 @@ The suite covers **435 upstream fixtures**, including complete static inputs and
 
 - **Parser comparison:** upstream cases use Mermaid's raw parser and FlowDB; preprocessing cases use Mermaid's public API. [Fixture provenance and exclusions](test/fixtures/upstream/README.md).
 - **Package installation:** `test:package` checks archive contents and installs the tarball in a temporary directory outside the project.
-- **Browser execution:** `npm run test:browser:build` generates `.cache/browser-smoke/index.html`. Serve that directory over HTTP and open the page to compare five diagrams in both charsets against Node.js output. Results are available in `window.__flowinkSmoke`.
+- **Browser execution:** `npm run test:browser:build` generates `.cache/browser-smoke/index.html`. Serve that directory over HTTP and open the page to compare five diagrams in both charsets against Node.js output. Results are available in `window.__mermaidToAsciiSmoke`.
 
 Fixtures are checked in, so tests do not download upstream source on each run. Mermaid itself is a development-only oracle dependency. Rendering is asynchronous but still uses CPU; applications can run large layouts in their own worker.
 
 ## License
 
-FlowInk's own code is [MIT](LICENSE). Mermaid-derived files retain their MIT attribution. Runtime dependencies retain their own licenses, including elkjs's `EPL-2.0 OR GPL-3.0-or-later`. See [third-party notices](NOTICE.md).
+mermaid-to-ascii's own code is [MIT](LICENSE). Mermaid-derived files retain their MIT attribution. Runtime dependencies retain their own licenses, including elkjs's `EPL-2.0 OR GPL-3.0-or-later`. See [third-party notices](NOTICE.md).

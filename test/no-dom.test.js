@@ -6,14 +6,14 @@ test('runs without a DOM and keeps interactions as serializable data', async () 
   assert.equal(typeof globalThis.document, 'undefined');
   assert.equal(typeof globalThis.window, 'undefined');
   let invoked = false;
-  globalThis.flowinkTestCallback = () => { invoked = true; };
+  globalThis.mermaidToAsciiTestCallback = () => { invoked = true; };
   try {
-    const source = 'flowchart LR\n A[Start] --> B[Done]\n click A flowinkTestCallback "Tip"';
+    const source = 'flowchart LR\n A[Start] --> B[Done]\n click A mermaidToAsciiTestCallback "Tip"';
     const graph = parse(source);
     assert.equal(JSON.parse(JSON.stringify(graph)).source, source);
     assert.match(await render(source), /Start/);
     assert.equal(invoked, false);
   } finally {
-    delete globalThis.flowinkTestCallback;
+    delete globalThis.mermaidToAsciiTestCallback;
   }
 });

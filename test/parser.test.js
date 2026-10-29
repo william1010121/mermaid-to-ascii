@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { parse } from '../src/parse.js';
-import { FlowInkError } from '../src/errors.js';
+import { MermaidToAsciiError } from '../src/errors.js';
 
 test('parses nodes, labels, directions, and edge labels', () => {
   const graph = parse('flowchart LR\n  A[Start] -->|next| B{Ready?}');
@@ -52,9 +52,9 @@ test('preprocesses comments and frontmatter while retaining original source', ()
   assert.deepEqual(graph.edges.map(({ source, target }) => ({ source, target })), [{ source: 'A', target: 'B' }]);
 });
 
-test('wraps invalid syntax in FlowInkError', () => {
+test('wraps invalid syntax in MermaidToAsciiError', () => {
   assert.throws(() => parse('flowchart LR\n A -->'), (error) => {
-    assert.ok(error instanceof FlowInkError);
+    assert.ok(error instanceof MermaidToAsciiError);
     assert.equal(error.code, 'PARSE_ERROR');
     return true;
   });

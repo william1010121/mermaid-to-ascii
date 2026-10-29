@@ -1,4 +1,4 @@
-import { FlowInkError } from './errors.js';
+import { MermaidToAsciiError } from './errors.js';
 import { displayWidth } from './text.js';
 
 /**
@@ -15,7 +15,7 @@ import { displayWidth } from './text.js';
 export function rasterize(layout, options = {}) {
   const charset = options?.charset ?? 'ascii';
   if (charset !== 'ascii' && charset !== 'unicode') {
-    throw new FlowInkError('charset must be "ascii" or "unicode".', { code: 'INVALID_OPTIONS' });
+    throw new MermaidToAsciiError('charset must be "ascii" or "unicode".', { code: 'INVALID_OPTIONS' });
   }
   const checked = validateLayout(layout);
   const { boxes, edges, labels, width, height } = checked;
@@ -491,6 +491,6 @@ function segment(value) {
   return Array.from(value);
 }
 
-function fail(message, code) { throw new FlowInkError(message, { code }); }
+function fail(message, code) { throw new MermaidToAsciiError(message, { code }); }
 
 export default rasterize;

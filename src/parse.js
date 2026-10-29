@@ -1,11 +1,11 @@
 import parser from './parser/generated.js';
-import { FlowInkError } from './errors.js';
+import { MermaidToAsciiError } from './errors.js';
 import { FlowSemanticDB, parserError } from './parser/semantic.js';
 import { preprocess } from './parser/preprocess.js';
 
 /** @param {string} source @returns {import('./types.js').FlowGraph} */
 export function parse(source) {
-  if (typeof source !== 'string') throw new FlowInkError('Flowchart source must be a string', { code: 'INVALID_INPUT' });
+  if (typeof source !== 'string') throw new MermaidToAsciiError('Flowchart source must be a string', { code: 'INVALID_INPUT' });
   const db = new FlowSemanticDB(source);
   const processed = preprocess(source);
   const localParser = new parser.Parser();
@@ -22,7 +22,7 @@ export function parse(source) {
     Object.assign(graph.metadata, processed.metadata);
     return graph;
   } catch (error) {
-    if (error instanceof FlowInkError) throw error;
+    if (error instanceof MermaidToAsciiError) throw error;
     const wrapped = parserError(error, source);
     if (wrapped.line !== undefined) wrapped.line += processed.lineOffset;
     throw wrapped;

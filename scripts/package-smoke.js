@@ -19,12 +19,12 @@ for (const path of ['dist/index.js', 'dist/index.d.ts', 'dist/types.d.ts', 'vend
 if ([...paths].some(path => path.startsWith('test/') || path.startsWith('node_modules/'))) throw new Error('Package includes development files');
 const pack = JSON.parse(run('npm', ['pack', '--ignore-scripts', '--json', '--pack-destination', outdir], root))[0];
 const archive = join(outdir, pack.filename);
-const consumer = await mkdtemp(join(tmpdir(), 'flowink-consumer-'));
+const consumer = await mkdtemp(join(tmpdir(), 'mermaid-to-ascii-consumer-'));
 try {
   await writeFile(join(consumer, 'package.json'), JSON.stringify({ type: 'module', private: true }));
   run('npm', ['install', '--ignore-scripts', '--omit=dev', '--no-audit', '--no-fund', archive], consumer);
   await writeFile(join(consumer, 'check.mjs'), `import assert from 'node:assert/strict';
-import {parse,render} from 'flowink';
+import {parse,render} from 'mermaid-to-ascii';
 const source='flowchart LR\\n A[Start] --> B[Done]';
 assert.equal(parse(source).nodes.length,2);
 assert.match(await render(source),/Start/);
